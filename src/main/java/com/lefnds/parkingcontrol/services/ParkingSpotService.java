@@ -2,6 +2,7 @@ package com.lefnds.parkingcontrol.services;
 
 import com.lefnds.parkingcontrol.models.ParkingSpotModel;
 import com.lefnds.parkingcontrol.repositories.ParkingSpotRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +23,9 @@ public class ParkingSpotService {
         return repository.findById(id).get();
     }
 
-    public ParkingSpotModel save(UUID id) {
-        ParkingSpotModel entity = repository.findById(id).get();
-        return repository.save(entity);
+    @Transactional
+    public ParkingSpotModel save(ParkingSpotModel parkingSpotModel) {
+        return repository.save(parkingSpotModel);
     }
 
     public ParkingSpotModel update(UUID id, ParkingSpotModel p) {
