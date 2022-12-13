@@ -37,4 +37,17 @@ public class ParkingSpotService {
         ParkingSpotModel entity = repository.findById(id).get();
         repository.delete(entity);
     }
+
+    public boolean existsByLicensePlateCar(String licensePlateCar) {
+        return repository.existsByLicensePlateCar(licensePlateCar);
+    }
+
+    public boolean existsByParkingSpotNumber(String parkingSpotNumber) {
+        return repository.existsByParkingSpotNumber(parkingSpotNumber);
+
+    }
+
+    public boolean existsByApartmentAndBlock(String apartment, String block) {
+        return repository.existsByApartmentAndBlock(apartment, block);
+    }
 }
