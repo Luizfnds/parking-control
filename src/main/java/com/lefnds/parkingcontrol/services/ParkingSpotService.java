@@ -34,8 +34,8 @@ public class ParkingSpotService {
         return repository.save(entity);
     }
 
-    public void delete(UUID id) {
-        ParkingSpotModel entity = repository.findById(id).get();
+    @Transactional
+    public void delete(ParkingSpotModel entity) {
         repository.delete(entity);
     }
 
