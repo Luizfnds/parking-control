@@ -7,12 +7,14 @@ import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -23,7 +25,7 @@ public class ParkingSpotController {
     private ParkingSpotService service;
 
     @PostMapping
-    public ResponseEntity<Object> saveParkinSpot(@RequestBody @Valid ParkingSpotDto parkingSpotDto) {
+    public ResponseEntity<Object> saveParkingSpot(@RequestBody @Valid ParkingSpotDto parkingSpotDto) {
         if(service.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Licence Plate Car is already in use!");
         }
@@ -37,5 +39,19 @@ public class ParkingSpotController {
         BeanUtils.copyProperties(parkingSpotDto, parkingSpotModel);
         parkingSpotModel.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(parkingSpotModel));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ParkingSpotModel>> getALlParkingSpots() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getOneParkingSpot(@PathVariable(value = "id") UUID id) {
+        Optional entity = service.findById(id);
+        if (entity.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Parking Spot not found!");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(entity.get());
     }
 }
